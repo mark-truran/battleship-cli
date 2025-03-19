@@ -4,7 +4,7 @@ namespace BattleshipCLTest;
 
 public class BoardTests
 {
-    public BoardTests()
+    public BoardTests()git status
     {
         Console.SetOut(new StringWriter());
     }
