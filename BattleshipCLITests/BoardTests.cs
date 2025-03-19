@@ -4,6 +4,11 @@ namespace BattleshipCLTest;
 
 public class BoardTests
 {
+    public BoardTests()
+    {
+        Console.SetOut(new StringWriter());
+    }
+    
     [Fact]
     public void Initialise_ShouldPopulate2DAreaWithTildeCharacter()
     {
