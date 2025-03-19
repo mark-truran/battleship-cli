@@ -18,7 +18,7 @@ To run the game, follow these steps:
    ```
 2. Navigate to the solution directory:
    ```sh
-   cd battleships-cli
+   cd battleship-cli
    ```
 3. Ensure you have .NET SDK installed (version 9.0 or later).
 4. Build the project:
