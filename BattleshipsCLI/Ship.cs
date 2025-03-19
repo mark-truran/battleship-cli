@@ -1,19 +1,21 @@
-﻿namespace BattleshipsCLI;
+﻿using System.Runtime.CompilerServices;
 
-public class Ship(string name, List<(int, int)> positions)
+[assembly: InternalsVisibleTo("BattleshipsCLITests")]
+
+namespace BattleshipsCLI;
+
+internal class Ship(string name, List<(int, int)> positions)
 {
     public string Name { get; } = name;
     public List<(int row, int col)> Positions { get; } = positions;
-    
-    private readonly HashSet<(int row, int col)> _hits = [];
+
+    internal readonly HashSet<(int row, int col)> Hits = [];
 
     public void RegisterHit(int row, int col)
     {
         if (Positions.Contains((row, col)))
-            _hits.Add((row, col));
+            Hits.Add((row, col));
     }
 
-    public bool IsSunk() => _hits.Count == Positions.Count;
-    
-    public HashSet<(int row, int col)> GetHits() => _hits;
+    public bool IsSunk() => Hits.Count == Positions.Count;
 }

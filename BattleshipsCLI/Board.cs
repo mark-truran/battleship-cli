@@ -1,20 +1,20 @@
-﻿namespace BattleshipsCLI;
+﻿using System.Runtime.CompilerServices;
 
-public class Board(int rows, int columns, ShipInfo[] fleetInfo, int shipPlacementRetryLimit = 10)
+[assembly: InternalsVisibleTo("BattleshipCLITests")]
+
+namespace BattleshipsCLI;
+
+internal class Board(int rows, int columns, ShipInfo[] fleetInfo, int shipPlacementRetryLimit = 10)
 {
-    private readonly char[,] _grid = new char[rows, columns];
+    internal readonly char[,] Grid = new char[rows, columns];
 
-    public List<Ship> Ships { get; set; } = [];
+    internal List<Ship> Ships { get; } = [];
     
     public void Initialise()
     {
         for (var i = 0; i < rows; i++)
-        {
             for (var j = 0; j < columns; j++)
-            {
-                _grid[i, j] = '~'; 
-            }
-        }
+                Grid[i, j] = '~'; 
     }
     
     public void PlaceShips()
@@ -41,7 +41,7 @@ public class Board(int rows, int columns, ShipInfo[] fleetInfo, int shipPlacemen
                         var r = row + (horizontal ? 0 : i);
                         var c = col + (horizontal ? i : 0);
 
-                        if (r >= rows || c >= columns || _grid[r, c] != '~')
+                        if (r >= rows || c >= columns || Grid[r, c] != '~')
                             break;
 
                         positions.Add((r, c));
@@ -52,7 +52,7 @@ public class Board(int rows, int columns, ShipInfo[] fleetInfo, int shipPlacemen
                         Ships.Add(new Ship(shipInfo.Name, positions));
                         foreach (var (r, c) in positions)
                         {
-                            _grid[r, c] = shipInfo.Symbol; 
+                            Grid[r, c] = shipInfo.Symbol; 
                         }
                         placed = true;
                     }
@@ -70,7 +70,7 @@ public class Board(int rows, int columns, ShipInfo[] fleetInfo, int shipPlacemen
     public void PrintBoard(bool showShips = false)
     {
         Console.Write("   "); 
-        for (int i = 1; i <= columns; i++)
+        for (var i = 1; i <= columns; i++)
         {
             var spacer = i >= 10 ? " " : "  ";
             Console.Write(i + spacer); 
@@ -82,7 +82,7 @@ public class Board(int rows, int columns, ShipInfo[] fleetInfo, int shipPlacemen
             Console.Write((char)('A' + i) + "  "); 
             for (var j = 0; j < columns; j++)
             {
-                var displayChar = (fleetInfo.Select(c => c.Symbol).Contains(_grid[i, j]) && !showShips) ? '~' : _grid[i, j];
+                var displayChar = (fleetInfo.Select(c => c.Symbol).Contains(Grid[i, j]) && !showShips) ? '~' : Grid[i, j];
                 Console.Write($"{displayChar}  ");
             }
             Console.WriteLine();
@@ -103,13 +103,13 @@ public class Board(int rows, int columns, ShipInfo[] fleetInfo, int shipPlacemen
         if (rowIndex < 0 || rowIndex >= rows || colIndex < 0 || colIndex >= columns)
             return false;
 
-        if (_grid[rowIndex, colIndex] == 'X' || _grid[rowIndex, colIndex] == 'O')
+        if (Grid[rowIndex, colIndex] == 'X' || Grid[rowIndex, colIndex] == 'O')
             return false; 
 
         foreach (var ship in Ships.Where(ship => ship.Positions.Contains((rowIndex, colIndex))))
         {
             ship.RegisterHit(rowIndex, colIndex);
-            _grid[rowIndex, colIndex] = 'X';
+            Grid[rowIndex, colIndex] = 'X';
             Console.WriteLine("Hit!");
 
             if (ship.IsSunk())
@@ -118,18 +118,12 @@ public class Board(int rows, int columns, ShipInfo[] fleetInfo, int shipPlacemen
             return true;
         }
 
-        _grid[rowIndex, colIndex] = 'O'; // Miss
+        Grid[rowIndex, colIndex] = 'O'; 
         Console.WriteLine("Miss!");
         return true;
     }
     
     public bool AllShipsSunk() => Ships.All(s => s.IsSunk());
     
-    public IEnumerable<char> GetFlattenedGrid() => _grid.Cast<char>();
-    
-    public char[,] GetGrid() => _grid;
-    
-    public IEnumerable<Ship> GetShips() => Ships;
-    
-    
+    public IEnumerable<char> GetFlattenedGrid() => Grid.Cast<char>();
 }

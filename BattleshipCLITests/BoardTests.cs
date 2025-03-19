@@ -40,11 +40,13 @@ public class BoardTests
         // Act
         board.Initialise();
         board.PlaceShips();
+        
+        // Assert
+        Assert.Single(board.Ships);
+        
         var characterCounts = board.GetFlattenedGrid()
             .GroupBy(c => c)
             .Select(g => new { Character = g.Key, Count = g.Count() }).ToList();
-
-        // Assert
         Assert.Equal((rows * columns) - (shipInfo.Size),
             characterCounts.Where(c => c.Character == '~').Sum(c => c.Count));
         Assert.Equal(shipInfo.Size, characterCounts.Where(c => c.Character == 'B').Sum(c => c.Count));
@@ -71,46 +73,21 @@ public class BoardTests
             Count = 2
         };
         
-        var grid = new Board(rows, columns, [battleship, destroyers]);
+        var board = new Board(rows, columns, [battleship, destroyers]);
 
         // Act
-        grid.Initialise();
-        grid.PlaceShips();
-        var characterCounts = grid.GetFlattenedGrid()
+        board.Initialise();
+        board.PlaceShips();
+        var characterCounts = board.GetFlattenedGrid()
             .GroupBy(c => c)
             .Select(g => new { Character = g.Key, Count = g.Count() }).ToList();
 
         // Assert
+        Assert.Equal(3, board.Ships.Count);
         Assert.Equal((rows * columns) - (battleship.Size + destroyers.Size + destroyers.Size),
             characterCounts.Where(c => c.Character == '~').Sum(c => c.Count));
         Assert.Equal(destroyers.Size + destroyers.Size, characterCounts.Where(c => c.Character == 'D').Sum(c => c.Count));
         Assert.Equal(battleship.Size, characterCounts.Where(c => c.Character == 'B').Sum(c => c.Count));
-    }
-    
-    [Theory]
-    [InlineData("A1", true)]   // Valid lower boundary
-    [InlineData("B5", true)]   // Valid middle value
-    [InlineData("J10", true)]  // Valid upper boundary in a 10x10 grid
-    [InlineData("K1", false)]  // Invalid row (out of bounds)
-    [InlineData("A0", false)]  // Invalid column (too low)
-    [InlineData("A11", false)] // Invalid column (too high for a 10x10 grid)
-    [InlineData("1A", false)]  // Invalid format (number before letter)
-    [InlineData("AA1", false)] // Invalid format (double letters)
-    [InlineData("", false)]    // Empty string
-    [InlineData(null, false)]  // Null input
-    [InlineData("Z5", false)]  // Row out of bounds for 10x10
-    [InlineData("a7", true)]   // Lowercase row (should be valid)
-    public void FiresShot_ValidatesCoorindatesProperly(string? target, bool expected)
-    {
-        // Arrange
-        var playerGrid = new Board(10, 10, [], 10);
-        playerGrid.Initialise();
-
-        // Act
-        var result = playerGrid.FireShot(target);
-
-        // Assert
-        Assert.Equal(expected, result);
     }
     
     [Fact]
@@ -136,6 +113,32 @@ public class BoardTests
         Assert.Equal($"Unable to place {battleships.Name}. Increase grid size or reduce number of ships.", exception.Message);
     }
     
+    [Theory]
+    [InlineData("A1", true)]   // Valid lower boundary
+    [InlineData("B5", true)]   // Valid middle value
+    [InlineData("J10", true)]  // Valid upper boundary in a 10x10 grid
+    [InlineData("K1", false)]  // Invalid row (out of bounds)
+    [InlineData("A0", false)]  // Invalid column (too low)
+    [InlineData("A11", false)] // Invalid column (too high for a 10x10 grid)
+    [InlineData("1A", false)]  // Invalid format (number before letter)
+    [InlineData("AA1", false)] // Invalid format (double letters)
+    [InlineData("", false)]    // Empty string
+    [InlineData(null, false)]  // Null input
+    [InlineData("Z5", false)]  // Row out of bounds for 10x10
+    [InlineData("a7", true)]   // Lowercase row (should be valid)
+    public void FiresShot_ValidatesCoordinatesProperly(string? target, bool expected)
+    {
+        // Arrange
+        var playerGrid = new Board(10, 10, []);
+        playerGrid.Initialise();
+
+        // Act
+        var result = playerGrid.FireShot(target);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+    
     [Fact]
     public void FireShot_ShouldWriteAnXToCorrectBoardPositionWhenAShipIsHit()
     {
@@ -156,7 +159,7 @@ public class BoardTests
         board.FireShot("A1"); 
 
         // Assert
-        Assert.Equal('X',board.GetGrid()[shipX,shipY]);
+        Assert.Equal('X',board.Grid[shipX,shipY]);
     }
     
     [Fact]
@@ -182,7 +185,7 @@ public class BoardTests
         board.FireShot("A2"); 
 
         // Assert
-        Assert.Equal('O',board.GetGrid()[shotX,shotY]);
+        Assert.Equal('O',board.Grid[shotX,shotY]);
     }
     
     [Fact]

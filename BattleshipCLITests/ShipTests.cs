@@ -14,7 +14,7 @@ public class ShipTests
         ship.RegisterHit(1, 2);
 
         // Assert
-        Assert.Contains((1, 2), ship.GetHits());
+        Assert.Contains((1, 2), ship.Hits);
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class ShipTests
         ship.RegisterHit(3, 3);
 
         // Assert
-        Assert.Empty(ship.GetHits()); // No valid hit was registered
+        Assert.Empty(ship.Hits); // No valid hit was registered
     }
     
     [Fact]
