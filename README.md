@@ -16,7 +16,7 @@ To run the game, follow these steps:
    ```sh
    git clone https://github.com/mark-truran/battleship-cli.git
    ```
-2. Navigate to the project directory:
+2. Navigate to the solution directory:
    ```sh
    cd battleships-cli
    ```
@@ -26,16 +26,15 @@ To run the game, follow these steps:
    dotnet build
    ```
 5. Run the tests
- Build the project:
     ```sh
     dotnet test
     ```
 5. Run the game:
    ```sh
-   cd battleships-cli
+   cd BattleshipsCLI
    dotnet run
    ```
-6. For help:
+6. For additional help:
     ```sh
    dotnet run -- -h
    ```
