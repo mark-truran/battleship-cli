@@ -21,7 +21,7 @@ app.AddCommand(([Option('d', Description = "Reveal hidden ships")] bool? debug, 
         settings.Columns = columns.Value;
         
     if (rows.HasValue)
-        settings.Columns = rows.Value;
+        settings.Rows = rows.Value;
     
     var board = new Board(settings.Rows, settings.Columns, hasbroMode.HasValue ? settings.ClassicFleetInfo : settings.FleetInfo, settings.ShipPlacementRetryLimit);
     board.Initialise();
