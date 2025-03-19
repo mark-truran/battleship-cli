@@ -64,7 +64,7 @@ You can change the following settings via command line arguments:
 - The number of rows in the 2D grid
 - The number of columns in the 2D grid
 - Debug mode (allows you to see the hidden ships, for testing)
-- Turn classic mode on (uses classic 1990 Milton Bradley set up)
+- Turn classic mode on (uses the classic 5-ship 1990 Milton Bradley set up)
 
 ## Game Mode
 Ships could be hidden in any square marked '~'. An 'X' means your shot was a hit. An 'O' means your shot was a miss. 
