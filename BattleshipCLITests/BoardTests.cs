@@ -49,7 +49,7 @@ public class BoardTests
             .Select(g => new { Character = g.Key, Count = g.Count() }).ToList();
         Assert.Equal((rows * columns) - (shipInfo.Size),
             characterCounts.Where(c => c.Character == '~').Sum(c => c.Count));
-        Assert.Equal(shipInfo.Size, characterCounts.Where(c => c.Character == 'B').Sum(c => c.Count));
+        Assert.Equal(shipInfo.Size, characterCounts.Where(c => c.Character == shipInfo.Symbol).Sum(c => c.Count));
     }
     
     [Fact]
@@ -86,8 +86,8 @@ public class BoardTests
         Assert.Equal(3, board.Ships.Count);
         Assert.Equal((rows * columns) - (battleship.Size + destroyers.Size + destroyers.Size),
             characterCounts.Where(c => c.Character == '~').Sum(c => c.Count));
-        Assert.Equal(destroyers.Size + destroyers.Size, characterCounts.Where(c => c.Character == 'D').Sum(c => c.Count));
-        Assert.Equal(battleship.Size, characterCounts.Where(c => c.Character == 'B').Sum(c => c.Count));
+        Assert.Equal(destroyers.Size + destroyers.Size, characterCounts.Where(c => c.Character == destroyers.Symbol).Sum(c => c.Count));
+        Assert.Equal(battleship.Size, characterCounts.Where(c => c.Character == battleship.Symbol).Sum(c => c.Count));
     }
     
     [Fact]

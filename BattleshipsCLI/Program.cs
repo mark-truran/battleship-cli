@@ -23,32 +23,38 @@ app.AddCommand(([Option('d', Description = "Reveal hidden ships")] bool? debug, 
     if (rows.HasValue)
         settings.Columns = rows.Value;
     
-    
     var board = new Board(settings.Rows, settings.Columns, hasbroMode.HasValue ? settings.ClassicFleetInfo : settings.FleetInfo, settings.ShipPlacementRetryLimit);
     board.Initialise();
-    board.PlaceShips();
 
-    Console.Clear();
-    Console.WriteLine("Welcome to Battleship!");
-    Console.WriteLine("Enter coordinates (e.g., A6, B4). Type 'q' to exit.");
-        
-    while (!board.AllShipsSunk())
+    try
     {
-        board.PrintBoard(settings.Debug);
+        Console.Clear();
+        board.PlaceShips();
+        Console.WriteLine("Welcome to Battleship!");
+        Console.WriteLine("Enter coordinates (e.g., A6, B4). Type 'q' to exit.");
         
-        Console.Write("\nCoordinates: ");
-        var input = Console.ReadLine()?.Trim().ToUpper();
-
-        if (input == "Q") break;
-
-        if (!board.FireShot(input))
+        while (!board.AllShipsSunk())
         {
-            Console.WriteLine("Invalid shot. Try again.");
-        }
-    }
+            board.PrintBoard(settings.Debug);
+        
+            Console.Write("\nCoordinates: ");
+            var input = Console.ReadLine()?.Trim().ToUpper();
 
-    Console.WriteLine("Congratulations! You sank all the ships!");
-    board.PrintBoard(true); 
+            if (input == "Q") break;
+
+            if (!board.FireShot(input))
+            {
+                Console.WriteLine("Invalid shot. Try again.");
+            }
+        }
+        Console.WriteLine("Congratulations! You sank all the ships!");
+        board.PrintBoard(true); 
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        Environment.Exit(1);
+    }
 });
 
 app.Run();
